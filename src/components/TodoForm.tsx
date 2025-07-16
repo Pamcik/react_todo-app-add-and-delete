@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {
   title: string;
-  onChange: (value: string) => void;
+  onChange: (v: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   disabled: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
@@ -14,20 +14,17 @@ export const TodoForm: React.FC<Props> = ({
   onSubmit,
   disabled,
   inputRef,
-}) => {
-  return (
-    <form onSubmit={onSubmit} data-cy="TodoForm">
-      <input
-        data-cy="NewTodoField"
-        type="text"
-        className="input todoapp__new-todo"
-        placeholder="What needs to be done?"
-        value={title}
-        onChange={e => onChange(e.target.value)}
-        disabled={disabled}
-        ref={inputRef}
-        autoFocus
-      />
-    </form>
-  );
-};
+}) => (
+  <form className="todoapp__new-todo-wrapper" onSubmit={onSubmit}>
+    <input
+      ref={inputRef}
+      type="text"
+      className="todoapp__new-todo"
+      placeholder="What needs to be done?"
+      value={title}
+      onChange={e => onChange(e.target.value)}
+      disabled={disabled}
+      data-cy="NewTodoField"
+    />
+  </form>
+);

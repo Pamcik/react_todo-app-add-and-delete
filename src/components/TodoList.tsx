@@ -1,24 +1,19 @@
-// src/components/TodoList.tsx
 import React from 'react';
-import { TodoItem } from './TodoItem';
+import TodoItem from './TodoItem';
 import { Todo } from '../types/Todo';
 
 type Props = {
   todos: Todo[];
+  tempTodo: Todo | null;
   loadingIds: number[];
   onDelete: (id: number) => void;
-  onToggle: (id: number, completed: boolean) => void;
-  onRename: (id: number, newTitle: string) => void;
-  tempTodo: Todo | null;
 };
 
 export const TodoList: React.FC<Props> = ({
   todos,
+  tempTodo,
   loadingIds,
   onDelete,
-  onToggle,
-  onRename,
-  tempTodo,
 }) => (
   <ul data-cy="TodoList" className="todo-list">
     {todos.map(todo => (
@@ -26,23 +21,17 @@ export const TodoList: React.FC<Props> = ({
         <TodoItem
           todo={todo}
           isLoading={loadingIds.includes(todo.id)}
-          onDelete={() => onDelete(todo.id)}
-          onToggle={onToggle}
-          onRename={onRename}
+          onDelete={onDelete}
         />
       </li>
     ))}
 
     {tempTodo && (
-      <li key={0}>
-        <TodoItem
-          todo={tempTodo}
-          isLoading
-          onDelete={() => {}}
-          onToggle={() => {}}
-          onRename={() => {}}
-        />
+      <li key="temp">
+        <TodoItem todo={tempTodo} isLoading />
       </li>
     )}
   </ul>
 );
+
+export default TodoList;
