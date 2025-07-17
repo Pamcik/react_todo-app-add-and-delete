@@ -1,37 +1,35 @@
 import React from 'react';
-import TodoItem from './TodoItem';
 import { Todo } from '../types/Todo';
+import TodoItem from './TodoItem';
+import '../styles/index.scss';
 
-type Props = {
+interface Props {
   todos: Todo[];
-  tempTodo: Todo | null;
   loadingIds: number[];
+  globalLoading: boolean;
   onDelete: (id: number) => void;
-};
+  onToggle: (todo: Todo) => void;
+}
 
-export const TodoList: React.FC<Props> = ({
+const TodoList: React.FC<Props> = ({
   todos,
-  tempTodo,
   loadingIds,
+  globalLoading,
   onDelete,
+  onToggle,
 }) => (
-  <ul data-cy="TodoList" className="todo-list">
+  <section className="todoapp__main" data-cy="TodoList">
     {todos.map(todo => (
-      <li key={todo.id}>
-        <TodoItem
-          todo={todo}
-          isLoading={loadingIds.includes(todo.id)}
-          onDelete={onDelete}
-        />
-      </li>
+      <TodoItem
+        key={todo.id}
+        todo={todo}
+        isBusy={loadingIds.includes(todo.id)}
+        globalLoading={globalLoading}
+        onDelete={() => onDelete(todo.id)}
+        onToggle={() => onToggle(todo)}
+      />
     ))}
-
-    {tempTodo && (
-      <li key="temp">
-        <TodoItem todo={tempTodo} isLoading />
-      </li>
-    )}
-  </ul>
+  </section>
 );
 
-export default TodoList;
+export default React.memo(TodoList);

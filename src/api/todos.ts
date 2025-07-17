@@ -7,8 +7,8 @@ export const getTodos = () => {
   return client.get<Todo[]>(`/todos?userId=${USER_ID}`);
 };
 
-export const addTodo = (todo: Todo) => {
-  return client.post<Todo>('/todos', todo);
+export const createTodo = (data: Omit<Todo, 'id'>): Promise<Todo> => {
+  return client.post<Todo>('/todos', data);
 };
 
 export const deleteTodo = (id: number) => {

@@ -1,29 +1,59 @@
 import React from 'react';
-import { Todo } from '../types/Todo';
+import '../styles/index.scss';
 
-type Props = {
-  todos: Todo[];
-  onClearCompleted: () => void;
-};
+interface Props {
+  activeCount: number;
+  completedCount: number;
+  currentFilter: FilterKey;
+  onFilterChange: (key: FilterKey) => void;
+  onClearCompleted: () => void | Promise<void>;
+}
 
-export const TodoFooter: React.FC<Props> = ({ todos, onClearCompleted }) => {
-  const activeCount = todos.filter(todo => !todo.completed).length;
-  const completedCount = todos.filter(todo => todo.completed).length;
+const FILTERS = [
+  { key: 'all', label: 'All' },
+  { key: 'active', label: 'Active' },
+  { key: 'completed', label: 'Completed' },
+] as const;
 
-  return (
-    <footer className="todoapp__footer" data-cy="Footer">
-      <span className="todo-count" data-cy="TodosCounter">
-        {activeCount} items left
-      </span>
+type FilterKey = (typeof FILTERS)[number]['key'];
+type FilterItem = (typeof FILTERS)[number];
 
-      <button
-        type="button"
-        className="todoapp__clear-completed"
-        onClick={onClearCompleted}
-        disabled={completedCount === 0}
-      >
-        Clear completed
-      </button>
-    </footer>
-  );
-};
+const TodoFooter: React.FC<Props> = ({
+  activeCount,
+  completedCount,
+  currentFilter,
+  onFilterChange,
+  onClearCompleted,
+}) => (
+  <footer className="todoapp__footer" data-cy="Footer">
+    <span className="todo-count" data-cy="TodosCounter">
+      {activeCount} items left
+    </span>
+
+    <nav className="filter" data-cy="Filter">
+      {FILTERS.map(({ key, label }: FilterItem) => (
+        <a
+          key={key}
+          href={`#/${key === 'all' ? '' : key}`}
+          className={`filter__link${currentFilter === key ? ' selected' : ''}`}
+          data-cy={`FilterLink${label}`}
+          onClick={() => onFilterChange(key)}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      type="button"
+      className="todoapp__clear-completed"
+      data-cy="ClearCompletedButton"
+      disabled={completedCount === 0}
+      onClick={onClearCompleted}
+    >
+      Clear completed
+    </button>
+  </footer>
+);
+
+export default React.memo(TodoFooter);
