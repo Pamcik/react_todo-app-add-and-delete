@@ -3,7 +3,6 @@ import { getTodos, createTodo, deleteTodo, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
 
 import TodoHeader from './components/TodoHeader';
-import TodoList from './components/TodoList';
 import TodoFooter from './components/TodoFooter';
 import { UserWarning } from './UserWarning';
 import ErrorNotification from './components/ErrorNotification';
@@ -174,14 +173,31 @@ export const App: React.FC = () => {
       {!isLoading && (
         <>
           {todos.length > 0 && (
-            <TodoList
-              todos={filteredTodos}
-              loadingIds={loadingTodoIds}
-              globalLoading={isLoading}
-              onDelete={handleDelete}
-              onToggle={() => {}}
-            />
+            <section className="todoapp__main" data-cy="TodoList">
+              {filteredTodos.map(todo => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  isBusy={loadingTodoIds.includes(todo.id)}
+                  globalLoading={isLoading}
+                  onDelete={() => handleDelete(todo.id)}
+                  onToggle={() => {}}
+                />
+              ))}
+
+              {tempTodo && (
+                <TodoItem
+                  key={tempTodo.id}
+                  todo={tempTodo}
+                  isBusy={true}
+                  globalLoading={false}
+                  onDelete={() => {}}
+                  onToggle={() => {}}
+                />
+              )}
+            </section>
           )}
+
           {todos.length > 0 && (
             <TodoFooter
               activeCount={activeCount}
@@ -192,17 +208,6 @@ export const App: React.FC = () => {
             />
           )}
         </>
-      )}
-
-      {tempTodo && (
-        <TodoItem
-          key={tempTodo.id}
-          todo={tempTodo}
-          isBusy={true}
-          globalLoading={false}
-          onDelete={() => {}}
-          onToggle={() => {}}
-        />
       )}
 
       <ErrorNotification
