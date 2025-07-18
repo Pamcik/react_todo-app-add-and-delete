@@ -1,6 +1,7 @@
 import React from 'react';
 import { Todo } from '../types/Todo';
 import '../styles/index.scss';
+import classNames from 'classnames';
 
 interface Props {
   todo: Todo;
@@ -17,7 +18,12 @@ const TodoItem: React.FC<Props> = ({
   onDelete,
   onToggle,
 }) => (
-  <div data-cy="Todo" className={`todo${todo.completed ? ' completed' : ''}`}>
+  <div
+    data-cy="Todo"
+    className={classNames('todo', {
+      completed: todo.completed,
+    })}
+  >
     {/* eslint-disable-next-line jsx-a11y/label-has-associated-control*/}
     <label className="todo__status-label">
       <input
@@ -42,7 +48,9 @@ const TodoItem: React.FC<Props> = ({
       ×
     </button>
     <div
-      className={`modal overlay${isBusy ? ' is-active' : ''}`}
+      className={classNames('modal', 'overlay', {
+        'is-active': isBusy,
+      })}
       data-cy="TodoLoader"
     >
       <div className="modal-background has-background-white-ter" />

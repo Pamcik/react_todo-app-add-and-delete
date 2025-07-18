@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import '../styles/index.scss';
+import classNames from 'classnames';
 
 interface Props {
   message: string;
@@ -21,9 +22,13 @@ const ErrorNotification: React.FC<Props> = ({ message, onClose }) => {
 
   return (
     <div
-      className={`notification is-danger is-light has-text-weight-normal ${
-        message ? '' : 'hidden'
-      }`}
+      className={classNames(
+        'notification',
+        'is-danger',
+        'is-light',
+        'has-text-weight-normal',
+        { hidden: !message },
+      )}
       data-cy="ErrorNotification"
     >
       <button

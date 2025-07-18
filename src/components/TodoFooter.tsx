@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/index.scss';
+import classNames from 'classnames';
 
 interface Props {
   activeCount: number;
@@ -35,7 +36,9 @@ const TodoFooter: React.FC<Props> = ({
         <a
           key={key}
           href={`#/${key === 'all' ? '' : key}`}
-          className={`filter__link${currentFilter === key ? ' selected' : ''}`}
+          className={classNames('filter__link', {
+            selected: currentFilter === key,
+          })}
           data-cy={`FilterLink${label}`}
           onClick={() => onFilterChange(key)}
         >

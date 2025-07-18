@@ -1,20 +1,22 @@
-import React, { useState, useRef, useEffect, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import '../styles/index.scss';
 
 interface Props {
   isLoading: boolean;
   onAdd: (title: string) => Promise<void>;
+  inputRef: React.RefObject<HTMLInputElement>;
 }
 
-const TodoHeader: React.FC<Props> = ({ isLoading, onAdd }) => {
+const TodoHeader: React.FC<Props> = ({ isLoading, onAdd, inputRef }) => {
   const [newTitle, setNewTitle] = useState<string>('');
-  const inputEl = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!isLoading) {
-      inputEl.current?.focus();
-    }
-  }, [isLoading]);
+    const timeout = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [inputRef]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -22,7 +24,10 @@ const TodoHeader: React.FC<Props> = ({ isLoading, onAdd }) => {
     try {
       await onAdd(newTitle);
       setNewTitle('');
-    } catch {}
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add todo:', error);
+    }
   };
 
   return (
@@ -30,14 +35,14 @@ const TodoHeader: React.FC<Props> = ({ isLoading, onAdd }) => {
       <h1 className="todoapp__title">todos</h1>
       <form onSubmit={handleSubmit}>
         <input
-          ref={inputEl}
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
           value={newTitle}
           onChange={e => setNewTitle(e.target.value)}
           disabled={isLoading}
-          autoFocus
           data-cy="NewTodoField"
+          ref={inputRef}
+          tabIndex={0}
         />
         <button
           type="submit"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { getTodos, createTodo, deleteTodo, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
 
@@ -26,6 +26,8 @@ export const App: React.FC = () => {
   const [loadingTodoIds, setLoadingTodoIds] = useState<number[]>([]);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const onHashChange = () => {
@@ -116,11 +118,6 @@ export const App: React.FC = () => {
       setErrorMessage('Unable to delete a todo');
     } finally {
       setLoadingTodoIds(prev => prev.filter(x => x !== id));
-      const input = document.querySelector<HTMLInputElement>(
-        '[data-cy="NewTodoField"]',
-      );
-
-      input?.focus();
     }
   };
 
@@ -152,12 +149,6 @@ export const App: React.FC = () => {
     }
 
     setLoadingTodoIds(prev => prev.filter(id => !completedIds.includes(id)));
-
-    const input = document.querySelector<HTMLInputElement>(
-      '[data-cy="NewTodoField"]',
-    );
-
-    input?.focus();
   };
 
   if (!USER_ID) {
@@ -166,7 +157,11 @@ export const App: React.FC = () => {
 
   return (
     <div className="todoapp">
-      <TodoHeader isLoading={isLoading || isAdding} onAdd={handleAdd} />
+      <TodoHeader
+        isLoading={isLoading || isAdding}
+        onAdd={handleAdd}
+        inputRef={inputRef}
+      />
 
       {isLoading && <div className="loading">Loading...</div>}
 
