@@ -32,7 +32,6 @@ const TodoHeader: React.FC<Props> = ({ isLoading, onAdd, inputRef }) => {
 
   return (
     <header className="todoapp__header" data-cy="Header">
-      <h1 className="todoapp__title">todos</h1>
       <form onSubmit={handleSubmit}>
         <input
           className="todoapp__new-todo"

@@ -157,54 +157,56 @@ export const App: React.FC = () => {
 
   return (
     <div className="todoapp">
-      <TodoHeader
-        isLoading={isLoading || isAdding}
-        onAdd={handleAdd}
-        inputRef={inputRef}
-      />
+      <h1 className="todoapp__title">todos</h1>
+      <div className="todoapp__content">
+        <TodoHeader
+          isLoading={isLoading || isAdding}
+          onAdd={handleAdd}
+          inputRef={inputRef}
+        />
 
-      {isLoading && <div className="loading">Loading...</div>}
+        {isLoading && <div className="loading">Loading...</div>}
 
-      {!isLoading && (
-        <>
-          {todos.length > 0 && (
-            <section className="todoapp__main" data-cy="TodoList">
-              {filteredTodos.map(todo => (
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  isBusy={loadingTodoIds.includes(todo.id)}
-                  globalLoading={isLoading}
-                  onDelete={() => handleDelete(todo.id)}
-                  onToggle={() => {}}
-                />
-              ))}
+        {!isLoading && (
+          <>
+            {todos.length > 0 && (
+              <section className="todoapp__main" data-cy="TodoList">
+                {filteredTodos.map(todo => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    isBusy={loadingTodoIds.includes(todo.id)}
+                    globalLoading={isLoading}
+                    onDelete={() => handleDelete(todo.id)}
+                    onToggle={() => {}}
+                  />
+                ))}
 
-              {tempTodo && (
-                <TodoItem
-                  key={tempTodo.id}
-                  todo={tempTodo}
-                  isBusy={true}
-                  globalLoading={false}
-                  onDelete={() => {}}
-                  onToggle={() => {}}
-                />
-              )}
-            </section>
-          )}
+                {tempTodo && (
+                  <TodoItem
+                    key={tempTodo.id}
+                    todo={tempTodo}
+                    isBusy={true}
+                    globalLoading={false}
+                    onDelete={() => {}}
+                    onToggle={() => {}}
+                  />
+                )}
+              </section>
+            )}
 
-          {todos.length > 0 && (
-            <TodoFooter
-              activeCount={activeCount}
-              completedCount={completedCount}
-              currentFilter={filter}
-              onFilterChange={setFilter}
-              onClearCompleted={handleClearCompleted}
-            />
-          )}
-        </>
-      )}
-
+            {todos.length > 0 && (
+              <TodoFooter
+                activeCount={activeCount}
+                completedCount={completedCount}
+                currentFilter={filter}
+                onFilterChange={setFilter}
+                onClearCompleted={handleClearCompleted}
+              />
+            )}
+          </>
+        )}
+      </div>
       <ErrorNotification
         message={errorMessage}
         onClose={() => setErrorMessage('')}
